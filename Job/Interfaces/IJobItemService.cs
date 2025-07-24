@@ -1,12 +1,13 @@
-﻿using Job.Services;
+﻿using Job.Models;
+using Job.Services;
 
 namespace Job.Interfaces
 {
     public interface IJobItemService
     {
-        public  Task<JobItem> GetJobById(Guid jobId);
-        public  Task<JobItem> CreateJobItem(JobCreateItem jobItem);
-        public  Task<IEnumerable<JobItem>> GetJobs();
+        public  Task<Models.Job> GetJobById(Guid jobId);
+        public  Task<Models.Job> CreateJobItem(JobSubmission jobItem);
+        public  Task<IEnumerable<Models.Job>> GetJobs();
 
     }
 }

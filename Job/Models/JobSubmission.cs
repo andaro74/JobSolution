@@ -1,6 +1,6 @@
 ﻿namespace Job.Models
 {
-    public class JobItemCreateRequest
+    public class JobSubmission
     {   
         public string? JobName { get; set; }
         public string? JobDescription { get; set; }

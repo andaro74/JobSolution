@@ -3,7 +3,6 @@ using Job.Services;
 using Job.Models;
 using Job.Interfaces;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Job.Controllers
 {
@@ -20,54 +19,28 @@ namespace Job.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<List<JobItemResponse>> Get()
+        public async Task<IEnumerable<Models.Job>> Get()
         {
-            IEnumerable<JobItem> jobs = await _jobItemService.GetJobs();
-
-            List<JobItemResponse> jobItemResponses = new List<JobItemResponse>();
-            foreach (JobItem jobItem in jobs) { 
-            
-                JobItemResponse jobItemResponse = new JobItemResponse();
-                jobItemResponse.JobId = jobItem.JobId;
-                jobItemResponse.JobName = jobItem.JobName;
-                jobItemResponse.JobDescription = jobItem.JobDescription;
-                jobItemResponses.Add(jobItemResponse);
-            
-            }
-            return jobItemResponses;
+            IEnumerable<Models.Job> jobItems = await _jobItemService.GetJobs();
+            return jobItems;
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<JobItemResponse> Get(Guid id)
+        public async Task<Models.Job> Get(Guid id)
         {
-            JobItem jobItem = await _jobItemService.GetJobById(id);
-
-            JobItemResponse jobItemResponse = new JobItemResponse();
-            jobItemResponse.JobId = jobItem.JobId;
-            return jobItemResponse;
+            Models.Job jobItem = await _jobItemService.GetJobById(id);
+            return jobItem;
         }
 
         // POST api/<ValuesController>
         [HttpPost]
         [ProducesResponseType(201)]
-        public async Task<ActionResult> Post([FromBody] JobItemCreateRequest jobItem)
+        public async Task<ActionResult> Post([FromBody] JobSubmission jobSubmission)
         {
-            JobCreateItem jobCreateItem = new JobCreateItem();
-            jobCreateItem.JobName = jobItem.JobName;
-            jobCreateItem.JobDescription = jobItem.JobDescription;
-            jobCreateItem.CustomerName = jobItem.CustomerName;
-            jobCreateItem.AssignedTo = jobItem.AssignedTo;
-            var item= await _jobItemService.CreateJobItem(jobCreateItem);
+            Models.Job jobItem= await _jobItemService.CreateJobItem(jobSubmission);
 
-            JobItemResponse jobItemResponse = new JobItemResponse();
-            jobItemResponse.JobId = item.JobId;
-            jobItemResponse.JobName = item.JobName;
-            jobItemResponse.JobDescription = item.JobDescription;
-            jobItemResponse.AssignedTo = item.AssignedTo;
-            jobItemResponse.CustomerName = item.CustomerName;
-
-            return CreatedAtAction(nameof(Get), new { id = jobItemResponse.JobId }, jobItemResponse);
+            return CreatedAtAction(nameof(Get), new { id = jobItem.JobId }, jobItem);
 
         }
 

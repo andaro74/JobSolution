@@ -1,4 +1,5 @@
 ﻿using Job.Interfaces;
+using Job.Models;
 
 namespace Job.Services
 {
@@ -6,12 +7,12 @@ namespace Job.Services
     {
         public JobItemService() { }
 
-        public async Task<IEnumerable<JobItem>> GetJobs()
+        public async Task<IEnumerable<Models.Job>> GetJobs()
         {
             // Simulate fetching job items from a database or other storage
-            List<JobItem> listJobItems= new List<JobItem>
+            List<Models.Job> listJobItems = new List<Models.Job>
             {
-                new JobItem
+                new Models.Job
                 {
                     JobId = Guid.NewGuid(),
                     JobName = "Job 1",
@@ -27,7 +28,7 @@ namespace Job.Services
                     Priority = "High",
                     CustomerName = "Customer A"
                 },
-                new JobItem
+                new Models.Job
                 {
                     JobId = Guid.NewGuid(),
                     JobName = "Job 2",
@@ -49,10 +50,10 @@ namespace Job.Services
             return listJobItems;
         }
 
-        public async Task<JobItem> CreateJobItem(JobCreateItem jobItem)
+        public async Task<Models.Job> CreateJobItem(JobSubmission jobItem)
         {
             // Simulate creating a new job item
-            JobItem job = new JobItem {
+            Models.Job job = new Models.Job {
                 JobId = Guid.NewGuid(),
                 JobName = jobItem.JobName,
                 JobDescription = jobItem.JobDescription,
@@ -71,10 +72,10 @@ namespace Job.Services
             return job;
         }
 
-        public async Task<JobItem> GetJobById(Guid jobId)
+        public async Task<Models.Job> GetJobById(Guid jobId)
         {
             // Simulate fetching a job item from a database or other storage
-            JobItem jobItem= new JobItem
+            Models.Job jobItem= new Models.Job
             {
                 JobId = jobId,
                 JobName = "Sample Job",

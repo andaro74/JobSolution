@@ -1,6 +1,6 @@
-﻿namespace Job.Services
+﻿namespace Job.Models
 {
-    public class JobItem
+    public class Job
     {
         public Guid JobId { get; set; }
         public string? JobName { get; set; }
