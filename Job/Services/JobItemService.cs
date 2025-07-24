@@ -1,13 +1,15 @@
-﻿namespace Job.Services
+﻿using Job.Interfaces;
+
+namespace Job.Services
 {
     public class JobItemService: IJobItemService
     {
         public JobItemService() { }
 
-        public IEnumerable<JobItem> GetJobs()
+        public async Task<IEnumerable<JobItem>> GetJobs()
         {
             // Simulate fetching job items from a database or other storage
-            return new List<JobItem>
+            List<JobItem> listJobItems= new List<JobItem>
             {
                 new JobItem
                 {
@@ -42,13 +44,15 @@
                     CustomerName = "Customer B"
                 }
             };
+
+            await Task.Delay(100); // Simulate async operation
+            return listJobItems;
         }
 
-        public JobItem CreateJobItem(JobCreateItem jobItem)
+        public async Task<JobItem> CreateJobItem(JobCreateItem jobItem)
         {
             // Simulate creating a new job item
-            return new JobItem
-            {
+            JobItem job = new JobItem {
                 JobId = Guid.NewGuid(),
                 JobName = jobItem.JobName,
                 JobDescription = jobItem.JobDescription,
@@ -63,12 +67,14 @@
                 Priority = "Medium",
                 CustomerName = jobItem.CustomerName
             };
+            await Task.Delay(100); // Simulate async operation
+            return job;
         }
 
-        public JobItem GetJobItem(Guid jobId)
+        public async Task<JobItem> GetJobById(Guid jobId)
         {
             // Simulate fetching a job item from a database or other storage
-            return new JobItem
+            JobItem jobItem= new JobItem
             {
                 JobId = jobId,
                 JobName = "Sample Job",
@@ -84,6 +90,8 @@
                 Priority = "High",
                 CustomerName = "Acme Corp"
             };
+            await Task.Delay(100); // Simulate async operation
+            return jobItem;
         }
 
 
