@@ -1,6 +1,6 @@
 ﻿using Job.API.Models;
 
-/// Interface that provides methods for managing job items.
+/// Interface that provides methods for managing job items including creation, retrieval, updating, and deletion.
 namespace Job.API.Interfaces
 {
     /// <summary>
