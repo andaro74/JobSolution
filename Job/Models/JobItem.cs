@@ -1,9 +1,24 @@
-﻿namespace Job.Models
+﻿/// JobItem Model representing a job item.
+namespace Job.Models
 {
-    public class Job
+    /// <summary>
+    /// JobItem Model representing a job item.
+    /// </summary>
+    public class JobItem
     {
+        /// <summary>
+        /// Job Identifier.
+        /// </summary>
         public Guid JobId { get; set; }
+
+        /// <summary>
+        /// Job Name.
+        /// </summary>
         public string? JobName { get; set; }
+
+        /// <summary>
+        /// Job Description.
+        /// </summary>
         public string? JobDescription { get; set; }
         public string? AssignedTo { get; set; }
         public DateTime CreatedDate { get; set; }
