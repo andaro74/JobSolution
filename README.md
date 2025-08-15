@@ -1,4 +1,4 @@
-# JobSolution
+# .NET Web API Jobs Solution Architecture
 
 .NET Web API Application that showcase microservice architecture.
 
