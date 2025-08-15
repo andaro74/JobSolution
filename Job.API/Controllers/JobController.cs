@@ -30,9 +30,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<IEnumerable<Models.JobItem>> Get()
+        public async Task<IEnumerable<JobItem>> Get()
         {
-            IEnumerable<Models.JobItem> jobItems = await _jobItemService.GetJobs();
+            IEnumerable<JobItem> jobItems = await _jobItemService.GetJobs();
             return jobItems;
         }
 
@@ -43,9 +43,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
-        public async Task<Models.JobItem> Get(Guid id)
+        public async Task<JobItem> Get(Guid id)
         {
-            Models.JobItem jobItem = await _jobItemService.GetJobById(id);
+            JobItem jobItem = await _jobItemService.GetJobById(id);
             return jobItem;
         }
 
@@ -58,7 +58,7 @@ namespace Job.API.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult> Post([FromBody] JobSubmission jobSubmission)
         {
-            Models.JobItem jobItem= await _jobItemService.CreateJobItem(jobSubmission);
+            JobItem jobItem= await _jobItemService.CreateJobItem(jobSubmission);
 
             return CreatedAtAction(nameof(Get), new { id = jobItem.JobId }, jobItem);
 
@@ -74,7 +74,7 @@ namespace Job.API.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> Put(Guid id, [FromBody] JobSubmission jobSubmission)
         {
-            Models.JobItem jobItem = await _jobItemService.UpdateJobItem(id, jobSubmission);
+            JobItem jobItem = await _jobItemService.UpdateJobItem(id, jobSubmission);
             return Ok(jobItem);
         }
         
