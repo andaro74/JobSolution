@@ -1,6 +1,6 @@
 ﻿
 /// JobSubmission model representing the data required to create or update a job item.
-namespace Job.Models
+namespace Job.API.Models
 {
     /// <summary>
     /// JobSubmission model representing the data required to create or update a job item.

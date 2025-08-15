@@ -1,9 +1,9 @@
 
-using Job.Interfaces;
-using Job.Services;
+using Job.API.Interfaces;
+using Job.API.Services;
 using Microsoft.Extensions.Configuration;
 
-namespace Job
+namespace Job.API
 {
     public class Program
     {

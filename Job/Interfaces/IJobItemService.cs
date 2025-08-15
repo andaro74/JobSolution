@@ -1,7 +1,7 @@
-﻿using Job.Models;
+﻿using Job.API.Models;
 
 /// Interface that provides methods for managing job items.
-namespace Job.Interfaces
+namespace Job.API.Interfaces
 {
     /// <summary>
     /// Interface for job item service.

@@ -1,5 +1,5 @@
 ﻿/// JobItem Model representing a job item.
-namespace Job.Models
+namespace Job.API.Models
 {
     /// <summary>
     /// JobItem Model representing a job item.

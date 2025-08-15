@@ -1,8 +1,8 @@
-﻿using Job.Interfaces;
-using Job.Models;
+﻿using Job.API.Interfaces;
+using Job.API.Models;
 
 /// Service that provides methods for managing job items.
-namespace Job.Services
+namespace Job.API.Services
 {
     /// <summary>
     /// Implements the job item service.

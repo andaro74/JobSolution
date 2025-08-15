@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Job.Services;
-using Job.Models;
-using Job.Interfaces;
+
+using Job.API.Models;
+using Job.API.Interfaces;
 
 
-namespace Job.Controllers
+namespace Job.API.Controllers
 {
     /// <summary>
     /// controller for managing job items.
