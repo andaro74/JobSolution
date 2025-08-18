@@ -1,0 +1,6 @@
+services:
+  job.api:
+    image: ${DOCKER_REGISTRY-}jobapi
+    build:
+      context: .
+      dockerfile: Job.API/Dockerfile
