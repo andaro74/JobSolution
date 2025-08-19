@@ -5,24 +5,10 @@ services:
       context: .
       dockerfile: Job.API/Dockerfile
 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2025-latest
-    restart: always
-    environment:
-        MSSQL_SA_PASSWORD: "98di!rLcek@3kGC!DrND6"
-        ACCEPT_EULA: "Yes"
-        MSSQL_PID: "Developer"
-    ports:
-      - 1433:1433
-    volumes:
-      - sqlserverdata:/var/opt/mssql
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge 
-
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    
 volumes:
-    sqlserverdata:
+    dynamodb_data:
         

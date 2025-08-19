@@ -1,5 +1,8 @@
 ﻿using Job.API.Interfaces;
 using Job.API.Models;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2;
 
 /// Service that provides methods for managing job items.
 namespace Job.API.Services
@@ -9,7 +12,15 @@ namespace Job.API.Services
     /// </summary>
     public class JobItemService: IJobItemService
     {
-        public JobItemService() { }
+        private readonly AmazonDynamoDBClient _client;
+        
+        public JobItemService() {
+            var config = new AmazonDynamoDBConfig
+            {
+                ServiceURL = Environment.GetEnvironmentVariable("DYNAMODB_ENDPOINT") ?? "http://localhost:8000"
+            };
+            _client = new AmazonDynamoDBClient(config);
+        }
 
         /// <summary>
         ///  Gets all job items.
@@ -53,8 +64,9 @@ namespace Job.API.Services
                     CustomerName = "Customer B"
                 }
             };
-
-            await Task.Delay(100); // Simulate async operation
+            var listTableResponse = await _client.ListTablesAsync(); // Ensure the table exists
+            Console.WriteLine($"Number of Tables in DynamoDB: {listTableResponse.TableNames.Count}");
+            
             return listJobItems;
         }
 

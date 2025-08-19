@@ -2,6 +2,9 @@
 using Job.API.Interfaces;
 using Job.API.Services;
 using Microsoft.Extensions.Configuration;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+
 
 namespace Job.API
 {
@@ -12,6 +15,11 @@ namespace Job.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Logging.AddConsole();
+
+            // Add DynamoDB services
+            builder.Services.AddAWSService<IAmazonDynamoDB>();
+            builder.Services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
