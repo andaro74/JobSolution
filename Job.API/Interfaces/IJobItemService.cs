@@ -1,4 +1,4 @@
-﻿using Job.API.Models;
+﻿using Job.API.DTOs;
 
 /// Interface that provides methods for managing job items including creation, retrieval, updating, and deletion.
 namespace Job.API.Interfaces
@@ -13,30 +13,30 @@ namespace Job.API.Interfaces
         /// </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public Task<JobItem> GetJobById(Guid jobId);
+        public Task<JobItemDTO> GetJobById(Guid Id);
         /// <summary>
         /// Creates a new job item.
         /// </summary>
         /// <param name="jobItem"></param>
         /// <returns></returns>
-        public Task<JobItem> CreateJobItem(JobSubmission jobItem);
+        public Task<JobItemDTO> CreateJobItem(JobItemRequestDTO jobItemRequest);
         /// <summary>
         /// gets all job items.
         /// </summary>
         /// <returns></returns>
-        public Task<IEnumerable<JobItem>> GetJobs();
+        public Task<IEnumerable<JobItemDTO>> GetJobs();
         /// <summary>
         /// updates the job item with the specified identifier.
         /// </summary>
         /// <param name="jobId"></param>
         /// <param name="jobItem"></param>
         /// <returns></returns>
-        public Task<JobItem> UpdateJobItem(Guid jobId, JobSubmission jobItem);
+        public Task<JobItemDTO> UpdateJobItem(Guid Id, JobItemRequestDTO jobItemRequest);
         /// <summary>
         /// deletes the job item with the specified identifier.
         /// </summary>
         /// <param name="jobId"></param>
-        public void DeleteJobItem(Guid jobId);
+        public void DeleteJobItem(Guid Id);
 
     }
 }

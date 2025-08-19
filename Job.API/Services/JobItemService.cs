@@ -1,8 +1,10 @@
 ﻿using Job.API.Interfaces;
 using Job.API.Models;
+using Job.API.DTOs;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2;
+using AutoMapper;
 
 /// Service that provides methods for managing job items.
 namespace Job.API.Services
@@ -13,8 +15,10 @@ namespace Job.API.Services
     public class JobItemService: IJobItemService
     {
         private readonly AmazonDynamoDBClient _client;
-        
-        public JobItemService() {
+        private readonly IMapper _mapper;
+
+        public JobItemService(IMapper mapper) {
+            _mapper = mapper;
             var config = new AmazonDynamoDBConfig
             {
                 ServiceURL = Environment.GetEnvironmentVariable("DYNAMODB_ENDPOINT") ?? "http://localhost:8000"
@@ -26,7 +30,7 @@ namespace Job.API.Services
         ///  Gets all job items.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<JobItem>> GetJobs()
+        public async Task<IEnumerable<JobItemDTO>> GetJobs()
         {
             // Simulate fetching job items from a database or other storage
             List<JobItem> listJobItems = new List<JobItem>
@@ -67,7 +71,9 @@ namespace Job.API.Services
             var listTableResponse = await _client.ListTablesAsync(); // Ensure the table exists
             Console.WriteLine($"Number of Tables in DynamoDB: {listTableResponse.TableNames.Count}");
             
-            return listJobItems;
+            var jobItemsDTOList=_mapper.Map<IEnumerable<JobItem>, IEnumerable<JobItemDTO>>(listJobItems);
+
+            return jobItemsDTOList;
         }
 
         /// <summary>
@@ -75,14 +81,14 @@ namespace Job.API.Services
         /// </summary>
         /// <param name="jobItem"></param>
         /// <returns></returns>
-        public async Task<Models.JobItem> CreateJobItem(JobSubmission jobItem)
+        public async Task<JobItemDTO> CreateJobItem(JobItemRequestDTO jobItemRequest)
         {
             // Simulate creating a new job item
-            JobItem job = new JobItem {
+            JobItem jobItem = new JobItem {
                 JobId = Guid.NewGuid(),
-                JobName = jobItem.JobName,
-                JobDescription = jobItem.JobDescription,
-                AssignedTo = jobItem.AssignedTo,
+                JobName = jobItemRequest.JobName,
+                JobDescription = jobItemRequest.JobDescription,
+                AssignedTo = jobItemRequest.AssignedTo,
                 CreatedDate = DateTime.UtcNow,
                 CompletedDate = null,
                 DueDate = DateTime.UtcNow.AddDays(7),
@@ -91,10 +97,11 @@ namespace Job.API.Services
                 CreatedBy = "Current Creator",
                 Status = "New",
                 Priority = "Medium",
-                CustomerName = jobItem.CustomerName
+                CustomerName = jobItemRequest.CustomerName
             };
             await Task.Delay(100); // Simulate async operation
-            return job;
+            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+            return jobItemDTO;
         }
 
         /// <summary>
@@ -102,12 +109,12 @@ namespace Job.API.Services
         /// </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task<JobItem> GetJobById(Guid jobId)
+        public async Task<JobItemDTO> GetJobById(Guid Id)
         {
             // Simulate fetching a job item from a database or other storage
             JobItem jobItem= new JobItem
             {
-                JobId = jobId,
+                JobId = Id,
                 JobName = "Sample JobItem",
                 JobDescription = "This is a sample job description.",
                 AssignedTo = "John Doe",
@@ -122,7 +129,8 @@ namespace Job.API.Services
                 CustomerName = "Acme Corp"
             };
             await Task.Delay(100); // Simulate async operation
-            return jobItem;
+            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+            return jobItemDTO;
         }
 
 
@@ -132,15 +140,15 @@ namespace Job.API.Services
         /// <param name="jobId"></param>
         /// <param name="jobItem"></param>
         /// <returns></returns>
-        public async Task<JobItem> UpdateJobItem(Guid jobId, JobSubmission jobItem)
+        public async Task<JobItemDTO> UpdateJobItem(Guid Id, JobItemRequestDTO jobItemRequest)
         {
             // Simulate updating a job item
-            JobItem job = new JobItem
+            JobItem jobItem = new JobItem
             {
                 JobId = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
-                JobName = jobItem.JobName,
-                JobDescription = jobItem.JobDescription,
-                AssignedTo = jobItem.AssignedTo,
+                JobName = jobItemRequest.JobName,
+                JobDescription = jobItemRequest.JobDescription,
+                AssignedTo = jobItemRequest.AssignedTo,
                 CreatedDate = DateTime.UtcNow.AddDays(-10), // Original creation date
                 CompletedDate = null,
                 DueDate = DateTime.UtcNow.AddDays(7),
@@ -149,17 +157,18 @@ namespace Job.API.Services
                 CreatedBy = "Original Creator",
                 Status = "Updated",
                 Priority = "Medium",
-                CustomerName = jobItem.CustomerName
+                CustomerName = jobItemRequest.CustomerName
             };
             await Task.Delay(100); // Simulate async operation
-            return job;
+            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+            return jobItemDTO;
         }
 
         /// <summary>
         /// Deletes the job item with the specified identifier.
         /// </summary>
         /// <param name="jobId"></param>
-        public void DeleteJobItem(Guid jobId)
+        public void DeleteJobItem(Guid Id)
         {
             return;
         }

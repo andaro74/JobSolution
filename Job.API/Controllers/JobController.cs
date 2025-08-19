@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-using Job.API.Models;
 using Job.API.Interfaces;
+using Job.API.DTOs;
 
 
 namespace Job.API.Controllers
@@ -30,9 +29,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<IEnumerable<JobItem>> Get()
+        public async Task<IEnumerable<JobItemDTO>> Get()
         {
-            IEnumerable<JobItem> jobItems = await _jobItemService.GetJobs();
+            IEnumerable<JobItemDTO> jobItems = await _jobItemService.GetJobs();
             return jobItems;
         }
 
@@ -43,9 +42,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
-        public async Task<JobItem> Get(Guid id)
+        public async Task<JobItemDTO> Get(Guid id)
         {
-            JobItem jobItem = await _jobItemService.GetJobById(id);
+            JobItemDTO jobItem = await _jobItemService.GetJobById(id);
             return jobItem;
         }
 
@@ -56,11 +55,11 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(201)]
-        public async Task<ActionResult> Post([FromBody] JobSubmission jobSubmission)
+        public async Task<ActionResult> Post([FromBody] JobItemRequestDTO jobItemRequest)
         {
-            JobItem jobItem= await _jobItemService.CreateJobItem(jobSubmission);
+            JobItemDTO jobItem= await _jobItemService.CreateJobItem(jobItemRequest);
 
-            return CreatedAtAction(nameof(Get), new { id = jobItem.JobId }, jobItem);
+            return CreatedAtAction(nameof(Get), new { id = jobItem.Id }, jobItem);
 
         }
 
@@ -72,9 +71,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] JobSubmission jobSubmission)
+        public async Task<ActionResult> Put(Guid id, [FromBody] JobItemRequestDTO jobItemRequest)
         {
-            JobItem jobItem = await _jobItemService.UpdateJobItem(id, jobSubmission);
+            var jobItem = await _jobItemService.UpdateJobItem(id, jobItemRequest);
             return Ok(jobItem);
         }
         
