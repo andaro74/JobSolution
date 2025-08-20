@@ -1,9 +1,9 @@
 
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Job.API.Interfaces;
 using Job.API.Maps;
 using Job.API.Services;
+using Job.API.Repositories;
 using Microsoft.Extensions.Configuration;
 
 
@@ -33,6 +33,7 @@ namespace Job.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<IJobItemService, JobItemService>();
+            builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryDynamoDB>();
 
             var app = builder.Build();
 

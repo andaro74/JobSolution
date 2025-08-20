@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Job.API.Interfaces;
 using Job.API.DTOs;
+using Job.API.Services;
 
 
 namespace Job.API.Controllers

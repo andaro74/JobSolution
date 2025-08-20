@@ -1,10 +1,8 @@
-﻿using Job.API.Interfaces;
-using Job.API.Models;
+﻿using Job.API.Models;
 using Job.API.DTOs;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2;
+
 using AutoMapper;
+using Job.API.Repositories;
 
 /// Service that provides methods for managing job items.
 namespace Job.API.Services
@@ -14,16 +12,13 @@ namespace Job.API.Services
     /// </summary>
     public class JobItemService: IJobItemService
     {
-        private readonly AmazonDynamoDBClient _client;
-        private readonly IMapper _mapper;
 
-        public JobItemService(IMapper mapper) {
+        private readonly IMapper _mapper;
+        private readonly IJobItemRepository _repository;
+
+        public JobItemService(IMapper mapper, IJobItemRepository repository) {
             _mapper = mapper;
-            var config = new AmazonDynamoDBConfig
-            {
-                ServiceURL = Environment.GetEnvironmentVariable("DYNAMODB_ENDPOINT") ?? "http://localhost:8000"
-            };
-            _client = new AmazonDynamoDBClient(config);
+            _repository = repository;
         }
 
         /// <summary>
@@ -32,46 +27,9 @@ namespace Job.API.Services
         /// <returns></returns>
         public async Task<IEnumerable<JobItemDTO>> GetJobs()
         {
-            // Simulate fetching job items from a database or other storage
-            List<JobItem> listJobItems = new List<JobItem>
-            {
-                new Models.JobItem
-                {
-                    JobId = Guid.NewGuid(),
-                    JobName = "JobItem 1",
-                    JobDescription = "Description for JobItem 1",
-                    AssignedTo = "Alice",
-                    CreatedDate = DateTime.UtcNow,
-                    CompletedDate = null,
-                    DueDate = DateTime.UtcNow.AddDays(5),
-                    ModifiedOn = DateTime.UtcNow,
-                    ModifiedBy = "Bob",
-                    CreatedBy = "Bob",
-                    Status = "Open",
-                    Priority = "High",
-                    CustomerName = "Customer A"
-                },
-                new JobItem
-                {
-                    JobId = Guid.NewGuid(),
-                    JobName = "JobItem 2",
-                    JobDescription = "Description for JobItem 2",
-                    AssignedTo = "Charlie",
-                    CreatedDate = DateTime.UtcNow,
-                    CompletedDate = null,
-                    DueDate = DateTime.UtcNow.AddDays(3),
-                    ModifiedOn = DateTime.UtcNow,
-                    ModifiedBy = "Dave",
-                    CreatedBy = "Dave",
-                    Status = "In Progress",
-                    Priority = "Medium",
-                    CustomerName = "Customer B"
-                }
-            };
-            var listTableResponse = await _client.ListTablesAsync(); // Ensure the table exists
-            Console.WriteLine($"Number of Tables in DynamoDB: {listTableResponse.TableNames.Count}");
-            
-            var jobItemsDTOList=_mapper.Map<IEnumerable<JobItem>, IEnumerable<JobItemDTO>>(listJobItems);
+          
+           var listJobItems = await _repository.GetJobsAsync();
+           var jobItemsDTOList = _mapper.Map<IEnumerable<JobItem>, IEnumerable<JobItemDTO>>(listJobItems);
 
             return jobItemsDTOList;
         }
@@ -85,7 +43,7 @@ namespace Job.API.Services
         {
             // Simulate creating a new job item
             JobItem jobItem = new JobItem {
-                JobId = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 JobName = jobItemRequest.JobName,
                 JobDescription = jobItemRequest.JobDescription,
                 AssignedTo = jobItemRequest.AssignedTo,
@@ -114,7 +72,7 @@ namespace Job.API.Services
             // Simulate fetching a job item from a database or other storage
             JobItem jobItem= new JobItem
             {
-                JobId = Id,
+                Id = Id,
                 JobName = "Sample JobItem",
                 JobDescription = "This is a sample job description.",
                 AssignedTo = "John Doe",
@@ -145,7 +103,7 @@ namespace Job.API.Services
             // Simulate updating a job item
             JobItem jobItem = new JobItem
             {
-                JobId = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
+                Id = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
                 JobName = jobItemRequest.JobName,
                 JobDescription = jobItemRequest.JobDescription,
                 AssignedTo = jobItemRequest.AssignedTo,

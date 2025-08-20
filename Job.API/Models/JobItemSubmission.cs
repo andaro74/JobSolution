@@ -5,7 +5,7 @@ namespace Job.API.Models
     /// <summary>
     /// JobSubmission model representing the data required to create or update a job item.
     /// </summary>
-    public class JobSubmission
+    public class JobItemSubmission
     {
         /// <summary>
         /// Job name

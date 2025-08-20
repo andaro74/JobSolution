@@ -1,7 +1,7 @@
 ﻿using Job.API.DTOs;
 
 /// Interface that provides methods for managing job items including creation, retrieval, updating, and deletion.
-namespace Job.API.Interfaces
+namespace Job.API.Services
 {
     /// <summary>
     /// Interface for job item service

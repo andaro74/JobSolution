@@ -9,7 +9,7 @@ namespace Job.API.Models
         /// <summary>
         /// Job Identifier.
         /// </summary>
-        public Guid JobId { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Job Name.
