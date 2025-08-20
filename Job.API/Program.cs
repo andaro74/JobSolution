@@ -1,6 +1,8 @@
 
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+//using Amazon.DynamoDBv2;
+//using Amazon.DynamoDBv2.DataModel;
+
+
 using Job.API.Maps;
 using Job.API.Services;
 using Job.API.Repositories;
@@ -19,8 +21,8 @@ namespace Job.API
             builder.Logging.AddConsole();
 
             // Add DynamoDB services
-            builder.Services.AddAWSService<IAmazonDynamoDB>();
-            builder.Services.AddTransient<IDynamoDBContext, DynamoDBContext>();
+            //builder.Services.AddAWSService<IAmazonDynamoDB>();
+            //builder.Services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
             //Add AutoMapper Configuration
             builder.Services.AddAutoMapper(cfg =>
@@ -33,7 +35,9 @@ namespace Job.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<IJobItemService, JobItemService>();
-            builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryDynamoDB>();
+            //builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryDynamoDB>();
+
+            builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryCosmosDB>();
 
             var app = builder.Build();
 

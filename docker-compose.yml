@@ -5,10 +5,10 @@ services:
       context: .
       dockerfile: Job.API/Dockerfile
 
-  dynamodb-local:
-    image: amazon/dynamodb-local
-    container_name: dynamodb-local
+  azure-cosmosdb-local:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+    container_name: azure-cosmosdb-local
     
 volumes:
-    dynamodb_data:
+    azure_cosmosdb_data:
         
