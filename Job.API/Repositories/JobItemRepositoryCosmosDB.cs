@@ -7,35 +7,24 @@ namespace Job.API.Repositories
 {
     public class JobItemRepositoryCosmosDB : IJobItemRepository
     {
-        private readonly CosmosClient _client;
+        
         private readonly IMapper _mapper;
+        private readonly ICosmosDBInitialization _dBInitialization;
+        
 
-        public JobItemRepositoryCosmosDB(IMapper mapper)
+        public  JobItemRepositoryCosmosDB(IMapper mapper, ICosmosDBInitialization cosmosDBInitialization)
         {
             _mapper = mapper;
-            var options = new CosmosClientOptions
-            {
-                HttpClientFactory = () => new HttpClient(new HttpClientHandler()
-                {
-                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                }),
-                ConnectionMode = ConnectionMode.Gateway,
+            _dBInitialization = cosmosDBInitialization;
 
-
-
-            };
-            var accountEndpoint = Environment.GetEnvironmentVariable("COSMOSDB_ENDPOINT") ?? "http://localhost:8081";
-            var authKeyOrResourceToken = Environment.GetEnvironmentVariable("COSMOSDB_KEY") ?? "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-
-            _client = new CosmosClient(
-                accountEndpoint: accountEndpoint,
-                authKeyOrResourceToken: authKeyOrResourceToken, options);
-        
         }
 
 
         public async Task<IEnumerable<JobItem>> GetJobsAsync()
         {
+            //Initialize Cosmos DB (create database and container if they do not exist)
+            await _dBInitialization.InitializeAsync();
+
             // Simulate fetching job items from a database or other storage
             List<JobItem> listJobItems = new List<JobItem>
             {
@@ -73,16 +62,30 @@ namespace Job.API.Repositories
                 }
             };
 
-            Console.WriteLine($"Getting Cosmosdatabase Jobs");
-            var cosmosdatabase = _client.GetDatabase("Jobs"); // Ensure the table exists
-            if (cosmosdatabase == null)
-            {
-                Console.WriteLine($"Creating Cosmosdatabase");
-                cosmosdatabase = await _client.CreateDatabaseIfNotExistsAsync("Jobs");
-                Console.WriteLine($"Created Cosmosdatabase");
-            }
-            Console.WriteLine($"Cosmosdatabase: {cosmosdatabase.Id}");
 
+            var client = _dBInitialization.Client;
+            var cosmosdatabase = Environment.GetEnvironmentVariable("COSMOSDB_DATABASE") ?? "JobDatabase";
+            var cosmoscontainer = Environment.GetEnvironmentVariable("COSMOSDB_CONTAINER") ?? "Jobs";
+            var cosmospartitionkey = Environment.GetEnvironmentVariable("COSMOSDB_PARTITION_KEY") ?? "/id";
+
+            Container? container = client.GetContainer(cosmosdatabase, cosmoscontainer);
+
+
+            var query = $"SELECT * FROM {cosmoscontainer}"; // SQL query to get all items
+            var queryDefinition = new QueryDefinition(query);
+            var queryIterator = container?.GetItemQueryIterator<dynamic>(queryDefinition);
+
+            List<dynamic> results = new List<dynamic>();
+
+            while (queryIterator !=null && queryIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> response = await queryIterator.ReadNextAsync();
+                results.AddRange(response);
+            }
+
+            Console.WriteLine($"Retrieved {results.Count} items from Cosmos DB.");
+
+           
 
             return await Task.FromResult(listJobItems);
         }

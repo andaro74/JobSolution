@@ -4,11 +4,53 @@ services:
     build:
       context: .
       dockerfile: Job.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - COSMOSDB_ENDPOINT=https://cosmosdb:8081/
+      - COSMOSDB_KEY=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      - COSMOSDB_DATABASE=JobDatabase
+      - COSMOSDB_CONTAINER=Jobs
+      - COSMOSDB_PARTITION_KEY=/id 
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      cosmosdb:
+        condition: service_healthy
+    networks:
+      - cosmosnet
+  
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    container_name: cosmosdb-emulator
+    ports:
+      - "8081:8081"
+      - "10250-10255:10250-10255"
+    environment:
+      - AZURE_COSMOSDB_EMULATOR_PARTITION_COUNT=1
+      - AZURE_COSMOSDB_EMULATOR_ENABLE_DATA_PERSISTENCE=true
+      - AZURE_COSMOSDB_EMULATOR_ENABLE_ANALYTICS_STORE=true
+      - PROTOCOL=https
+    privileged: true
+    restart: always
+    volumes:
+      - /home/azurecosmosdblocal/data
+    healthcheck:
+      test: ["CMD", "curl", "-k", "https://localhost:8081/_explorer/emulator.pem"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    networks:
+      - cosmosnet
 
-  azure-cosmosdb-local:
-    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
-    container_name: azure-cosmosdb-local
-    
-volumes:
-    azure_cosmosdb_data:
+networks:
+    cosmosnet:
+      driver: bridge
         

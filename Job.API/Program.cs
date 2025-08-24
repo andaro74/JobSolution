@@ -4,16 +4,19 @@
 
 
 using Job.API.Maps;
-using Job.API.Services;
 using Job.API.Repositories;
+using Job.API.Services;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 
 namespace Job.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -34,12 +37,19 @@ namespace Job.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //builder.Services.AddSingleton<CosmosDBInitialization>();
+            builder.Services.AddSingleton<ICosmosDBInitialization, CosmosDBInitialization>();
             builder.Services.AddTransient<IJobItemService, JobItemService>();
-            //builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryDynamoDB>();
-
+            
             builder.Services.AddTransient<IJobItemRepository, JobItemRepositoryCosmosDB>();
 
             var app = builder.Build();
+            
+            using (var scope = app.Services.CreateScope())
+            {
+                var initializer = scope.ServiceProvider.GetRequiredService<ICosmosDBInitialization>();
+                await initializer.InitializeAsync();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
