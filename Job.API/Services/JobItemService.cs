@@ -41,7 +41,6 @@ namespace Job.API.Services
         /// <returns></returns>
         public async Task<JobItemDTO> CreateJobItem(JobItemRequestDTO jobItemRequest)
         {
-            // Simulate creating a new job item
             JobItem jobItem = new JobItem {
                
                 JobName = jobItemRequest.JobName,
@@ -80,25 +79,22 @@ namespace Job.API.Services
         /// <returns></returns>
         public async Task<JobItemDTO> UpdateJobItem(Guid Id, JobItemRequestDTO jobItemRequest)
         {
-            // Simulate updating a job item
             JobItem jobItem = new JobItem
             {
-                id = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
+                id = Id,
                 JobName = jobItemRequest.JobName,
                 JobDescription = jobItemRequest.JobDescription,
                 AssignedTo = jobItemRequest.AssignedTo,
-                CreatedDate = DateTime.UtcNow.AddDays(-10), // Original creation date
                 CompletedDate = null,
                 DueDate = DateTime.UtcNow.AddDays(7),
-                ModifiedOn = DateTime.UtcNow,
-                ModifiedBy = "Current Modifier",
-                CreatedBy = "Original Creator",
-                Status = "Updated",
-                Priority = "Medium",
+                ModifiedBy = "Current Creator",
+                CreatedBy = "Current Creator",
                 CustomerName = jobItemRequest.CustomerName
             };
-            await Task.Delay(100); // Simulate async operation
-            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+
+            JobItem updatedJobItem=await _repository.UpdateJobAsync(jobItem);
+
+            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(updatedJobItem);
             return jobItemDTO;
         }
 

@@ -23,7 +23,6 @@ namespace Job.API.Repositories
             _cosmoscontainer = Environment.GetEnvironmentVariable("COSMOSDB_CONTAINER") ?? "Jobs";
             _cosmospartitionkey = Environment.GetEnvironmentVariable("COSMOSDB_PARTITION_KEY") ?? "/id";
 
-
         }
 
 
@@ -101,8 +100,6 @@ namespace Job.API.Repositories
         {
             Container? container = _dBInitialization.Client.GetContainer(_cosmosdatabase, _cosmoscontainer);
             ItemResponse<JobItem> itemResponse = await container.DeleteItemAsync<JobItem>(id.ToString(), new PartitionKey(id.ToString()));
-            // Simulate deleting a job item by ID
-            // In a real implementation, you would check if the item exists and then delete it
             return await Task.FromResult(true);
         }
     }
