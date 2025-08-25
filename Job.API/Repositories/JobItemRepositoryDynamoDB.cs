@@ -31,7 +31,7 @@ namespace Job.API.Repositories
             {
                 new JobItem
                 {
-                    Id = Guid.NewGuid(),
+                    id = Guid.NewGuid(),
                     JobName = "JobItem 1",
                     JobDescription = "Description for JobItem 1",
                     AssignedTo = "Alice",
@@ -47,7 +47,7 @@ namespace Job.API.Repositories
                 },
                 new JobItem
                 {
-                    Id = Guid.NewGuid(),
+                    id = Guid.NewGuid(),
                     JobName = "JobItem 2",
                     JobDescription = "Description for JobItem 2",
                     AssignedTo = "Charlie",
@@ -75,7 +75,7 @@ namespace Job.API.Repositories
             // Simulate fetching a job item by ID
             var jobItem = new JobItem
             {
-                Id = id,
+                id = id,
                 JobName = "Sample Job",
                 JobDescription = "This is a sample job description.",
                 AssignedTo = "John Doe",
@@ -95,7 +95,7 @@ namespace Job.API.Repositories
         public async Task<JobItem> CreateJobAsync(JobItem jobItem)
         {
             // Simulate creating a new job item
-            jobItem.Id = Guid.NewGuid();
+            jobItem.id = Guid.NewGuid();
             jobItem.CreatedDate = DateTime.UtcNow;
             jobItem.ModifiedOn = DateTime.UtcNow;
             jobItem.Status = "New";

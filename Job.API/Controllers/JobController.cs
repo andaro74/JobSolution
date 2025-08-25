@@ -42,9 +42,9 @@ namespace Job.API.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
-        public async Task<JobItemDTO> Get(Guid id)
+        public async Task<JobItemDTO?> Get(Guid id)
         {
-            JobItemDTO jobItem = await _jobItemService.GetJobById(id);
+            JobItemDTO? jobItem = await _jobItemService.GetJobById(id);
             return jobItem;
         }
 
@@ -85,9 +85,9 @@ namespace Job.API.Controllers
         /// <param name="id">The unique identifier of the job item to delete.</param>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            _jobItemService.DeleteJobItem(id);
+            await _jobItemService.DeleteJobItem(id);
         }
 
 

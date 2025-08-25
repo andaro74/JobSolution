@@ -12,7 +12,7 @@ namespace Job.API.Maps
             // Map JobItemRequestDTO to JobItem
             /*
             cfg.CreateMap<JobItemRequestDTO, JobItem>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.ModifiedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "New"))

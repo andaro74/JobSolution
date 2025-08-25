@@ -13,7 +13,7 @@ namespace Job.API.Services
         /// </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public Task<JobItemDTO> GetJobById(Guid Id);
+        public Task<JobItemDTO?> GetJobById(Guid Id);
         /// <summary>
         /// Creates a new job item.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Job.API.Services
         /// deletes the job item with the specified identifier.
         /// </summary>
         /// <param name="jobId"></param>
-        public void DeleteJobItem(Guid Id);
+        public Task DeleteJobItem(Guid Id);
 
     }
 }

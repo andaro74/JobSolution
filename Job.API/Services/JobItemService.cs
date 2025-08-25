@@ -43,22 +43,18 @@ namespace Job.API.Services
         {
             // Simulate creating a new job item
             JobItem jobItem = new JobItem {
-                Id = Guid.NewGuid(),
+               
                 JobName = jobItemRequest.JobName,
                 JobDescription = jobItemRequest.JobDescription,
                 AssignedTo = jobItemRequest.AssignedTo,
-                CreatedDate = DateTime.UtcNow,
                 CompletedDate = null,
                 DueDate = DateTime.UtcNow.AddDays(7),
-                ModifiedOn = DateTime.UtcNow,
                 ModifiedBy = "Current Creator",
                 CreatedBy = "Current Creator",
-                Status = "New",
-                Priority = "Medium",
                 CustomerName = jobItemRequest.CustomerName
             };
-            await Task.Delay(100); // Simulate async operation
-            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+            var jobItemResult = await _repository.CreateJobAsync(jobItem);
+            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItemResult);
             return jobItemDTO;
         }
 
@@ -67,27 +63,11 @@ namespace Job.API.Services
         /// </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task<JobItemDTO> GetJobById(Guid Id)
+        public async Task<JobItemDTO?> GetJobById(Guid Id)
         {
-            // Simulate fetching a job item from a database or other storage
-            JobItem jobItem= new JobItem
-            {
-                Id = Id,
-                JobName = "Sample JobItem",
-                JobDescription = "This is a sample job description.",
-                AssignedTo = "John Doe",
-                CreatedDate = DateTime.UtcNow,
-                CompletedDate = null,
-                DueDate = DateTime.UtcNow.AddDays(7),
-                ModifiedOn = DateTime.UtcNow,
-                ModifiedBy = "Jane Doe",
-                CreatedBy = "Jane Doe",
-                Status = "In Progress",
-                Priority = "High",
-                CustomerName = "Acme Corp"
-            };
-            await Task.Delay(100); // Simulate async operation
-            var jobItemDTO = _mapper.Map<JobItem, JobItemDTO>(jobItem);
+
+            var jobItem = await _repository.GetJobByIdAsync(Id);
+            var jobItemDTO = _mapper.Map<JobItem?, JobItemDTO?>(jobItem);
             return jobItemDTO;
         }
 
@@ -103,7 +83,7 @@ namespace Job.API.Services
             // Simulate updating a job item
             JobItem jobItem = new JobItem
             {
-                Id = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
+                id = Guid.NewGuid(), // In a real scenario, this would be the ID of the job being updated
                 JobName = jobItemRequest.JobName,
                 JobDescription = jobItemRequest.JobDescription,
                 AssignedTo = jobItemRequest.AssignedTo,
@@ -126,8 +106,9 @@ namespace Job.API.Services
         /// Deletes the job item with the specified identifier.
         /// </summary>
         /// <param name="jobId"></param>
-        public void DeleteJobItem(Guid Id)
+        public async Task DeleteJobItem(Guid Id)
         {
+            await _repository.DeleteJobAsync(Id);
             return;
         }
 
