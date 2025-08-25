@@ -3,13 +3,16 @@
 .NET Core REST Web API using C# that showcase the architecture of a Job request APIs using CosmosDB local emulator.
 
 Instructions:
+Clone the repository, then run the application using Dockercompose file and once the database is populated the REST API will load.
 
-Clone the repository
-Run the Dockercompose file and once the database is populated the REST API will load.
+<img width="485" height="143" alt="image" src="https://github.com/user-attachments/assets/da5c23f4-5bef-48af-9a4c-81980e0cc420" />
+
 
 There is a Java Spring WebFlux version [ https://github.com/andaro74/JobSolution](https://github.com/andaro74/JobsTracker/tree/master)
 
 <img width="1707" height="939" alt="image" src="https://github.com/user-attachments/assets/be8c806a-57a6-48ea-8de2-a4411ea4eb40" />
+
+Swagger Operations
 
 <img width="1630" height="1345" alt="image" src="https://github.com/user-attachments/assets/2d05b750-b737-49ef-ad67-316d47eb85c7" />
 
